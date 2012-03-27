@@ -1,4 +1,4 @@
-	OpenAttestation project is to provide SDK, Software Development Kit, to add cloud providers with capability of establishing hosts integrity information by remotely retrieving and verifying integrity with Host(s)' TPM quote.
+	OpenAttestation project is to provide SDK, Software Development Kit, to add cloud providers with capability of establishing hosts integrity information by remotely retrieving and verifying Hosts' integrity with TPM quote.
 
 	The SDK is expected to be integrated, and enhanced with security features, into ISV’s cloud management software, and distributed by ISV to cloud providers
 
