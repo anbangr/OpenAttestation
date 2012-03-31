@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="gov.niarl.hisAppraiser.hibernate.domain.MachineCert" table="machine_cert">
+		<id name="id" column="id" type="long" unsaved-value="null">
+			<generator class="native" />
+		</id>
+		<property name="machineName" column="machine_name"/>
+		<property name="certificate" column="certificate"/>
+		<property name="timestamp" column="timestamp"/>
+		<property name="active" column="active"/>
+		<many-to-one name="privacyCaMachineCert" class="gov.niarl.hisAppraiser.hibernate.domain.MachineCert" column="privacy_ca_id"/>
+		<property name="lastPoll" column="last_poll"/>
+		<property name="nextAction" column="next_action"/>
+		<property name="pollArgs" column="poll_args"/>
+	</class>
+</hibernate-mapping>

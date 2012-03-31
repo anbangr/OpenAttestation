@@ -1,0 +1,51 @@
+footer {
+	DISPLAY: block
+}
+header {
+	DISPLAY: block
+}
+hgroup {
+	DISPLAY: block
+}
+BODY {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	FONT: 62.5%/1.4 Arial,Helvetica,Verdana,sans-serif; BACKGROUND: #fff
+}
+DIV {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+H1 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+H2 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+H3 {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+H3 {
+	FONT-SIZE: 1.4em;FONT-WEIGHT: bold
+}
+EM {
+	FONT-STYLE: italic
+}
+TH {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+TD {
+	PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+TABLE {
+	BORDER-SPACING: 0; BORDER-COLLAPSE: collapse; CLEAR: both
+}
+.left_menu_div{width:250px; height:50px;margin:0 0 0 5px; border:2px dashed RGB(192,192,192); font-size:1.4em}
+.main_div{width:700px; height:50px;margin:0 0 0 5px; border:2px dashed RGB(192,192,192)}
+.main_div2{width:900px; height:50px;margin:0 0 0 5px; border:2px dashed RGB(192,192,192)}
+.main_div3{width:1100px; height:50px;margin:0 0 0 5px; border:2px dashed RGB(192,192,192)}
+.menu_font{FONT-SIZE: 1.4em;FONT-WEIGHT: bold; color:white}
+.nav_font {FONT-SIZE: 12px;FONT-WEIGHT: bold; color:black}
+.table_header_font {FONT-SIZE: 11px;FONT-WEIGHT: bold; color:black}
+.table_font {FONT-SIZE: 11px;color:black}
+.error_msg_font {FONT-SIZE: 11px;FONT-WEIGHT: bold; color:red}

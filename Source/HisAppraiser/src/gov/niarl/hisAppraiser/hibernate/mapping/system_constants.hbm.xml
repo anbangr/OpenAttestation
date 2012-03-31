@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="gov.niarl.hisAppraiser.hibernate.domain.SystemConstants" table="system_constants">
+		<id name="id" column="id" type="long" unsaved-value="null">
+			<generator class="native" />
+		</id>
+		<property name="keyId" column="key_id" />
+		<property name="value" column="value" />
+		<property name="description" column="description" />
+	</class>
+</hibernate-mapping>

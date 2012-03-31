@@ -1,0 +1,33 @@
+<jxb:bindings version="1.0"
+               xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <jxb:bindings schemaLocation="Core_Integrity_Manifest_v1_0_1.xsd" node="/xs:schema">
+
+    <jxb:schemaBindings>
+      <jxb:package name="gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.core_Integrity_v1_0_1"/>
+    </jxb:schemaBindings>
+    
+    <jxb:bindings node="//xs:complexType[@name='PlatformClassType']/xs:attribute[@name='Class']">
+      <jxb:property name="platformClassTypeAttributeClass"/>
+    </jxb:bindings>
+
+  </jxb:bindings>
+
+  <jxb:bindings schemaLocation="Integrity_Report_Manifest_v1_0.xsd" node="/xs:schema">
+
+    <jxb:schemaBindings>
+      <jxb:package name="gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.integrity_Report_v1_0"/>
+    </jxb:schemaBindings>
+    
+  </jxb:bindings>
+
+  <jxb:bindings schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd" node="/xs:schema">
+
+    <jxb:schemaBindings>
+      <jxb:package name="gov.niarl.his.xsd.integrity_Report_v1_0.org.w3._2000._09.xmldsig"/>
+    </jxb:schemaBindings>
+    
+  </jxb:bindings>
+
+</jxb:bindings>

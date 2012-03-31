@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding="UTF-8"?> 
+
+<!--
+    Copyright (c) 2004 Sun Microsystems, Inc. All rights reserved
+    Use is subject to license terms.
+-->
+
+<!DOCTYPE ModuleProperties PUBLIC "=//iPlanet//Authentication Module Properties XML Interface 1.0 DTD//EN"
+          "jar://com/sun/identity/authentication/Auth_Module_Properties.dtd">
+
+
+<ModuleProperties moduleName="HisLoginModule" version="1.0" >    
+    <Callbacks length="2" order="1" timeout="77" 
+        header="HIS authentication." >
+        <NameCallback>           
+            <Prompt>What is your sid.</Prompt>
+        </NameCallback>
+        <NameCallback>           
+            <Prompt>What is your machineName.</Prompt>
+        </NameCallback>
+    </Callbacks>
+    <Callbacks length="3" order="2" timeout="77" 
+        header="HIS authentication." >
+         <NameCallback>           
+            <Prompt>Replace with TextOutputCallback for nonce</Prompt>
+        </NameCallback>
+        <NameCallback>           
+            <Prompt>Replace with NameCallback for pcrSelect</Prompt>
+        </NameCallback>
+        <NameCallback>           
+            <Prompt>Replace with TextInputCallback for Integrity Report</Prompt>
+        </NameCallback>
+    </Callbacks>
+</ModuleProperties>

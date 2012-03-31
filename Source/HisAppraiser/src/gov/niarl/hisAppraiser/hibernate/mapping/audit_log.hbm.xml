@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="gov.niarl.hisAppraiser.hibernate.domain.AuditLog" table="audit_log">
+		<id name="id" column="id" type="long" unsaved-value="null">
+			<generator class="native" />
+		</id>
+		<property name="sid" column="SID"/>
+		<property name="machineName" column="machine_name"/>
+		<property name="timestamp" column="timestamp"/>
+		<property name="pcr0" column="pcr0"/>
+		<property name="pcr1" column="pcr1"/>
+		<property name="pcr2" column="pcr2"/>
+		<property name="pcr3" column="pcr3"/>
+		<property name="pcr4" column="pcr4"/>
+		<property name="pcr5" column="pcr5"/>
+		<property name="pcr6" column="pcr6"/>
+		<property name="pcr7" column="pcr7"/>
+		<property name="pcr8" column="pcr8"/>
+		<property name="pcr9" column="pcr9"/>
+		<property name="pcr10" column="pcr10"/>
+		<property name="pcr11" column="pcr11"/>
+		<property name="pcr12" column="pcr12"/>
+		<property name="pcr13" column="pcr13"/>
+		<property name="pcr14" column="pcr14"/>
+		<property name="pcr15" column="pcr15"/>
+		<property name="pcr16" column="pcr16"/>
+		<property name="pcr17" column="pcr17"/>
+		<property name="pcr18" column="pcr18"/>
+		<property name="pcr19" column="pcr19"/>
+		<property name="pcr20" column="pcr20"/>
+		<property name="pcr21" column="pcr21"/>
+		<property name="pcr22" column="pcr22"/>
+		<property name="pcr23" column="pcr23"/>
+		<many-to-one name="machine" class="gov.niarl.hisAppraiser.hibernate.domain.MachineCert" column="machine_id"/>
+		<property name="pcrSelect" column="pcr_select"/>
+		<property name="nonce" column="nonce"/>
+		<property name="signatureVerified" column="signature_verified"/>
+		<property name="report" column="report"/>
+		<property name="previousDifferences" column="previous_differences"/>
+		<property name="reportErrors" column="report_errors"/>
+	</class>
+</hibernate-mapping>

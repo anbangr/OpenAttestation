@@ -1,0 +1,118 @@
+<!-- This project is built with 'Apache Ant version 1.6.5' and 'java version 1.5' -->
+<project name="HisAppraiser" basedir="./" default="all">
+
+	<!-- Project settings -->
+	<property name="classes.dir" value="./bin" />
+	<property name="runtime.lib.dir" value="./lib" />
+	<property name="compile.lib.dir" value="./lib" />
+	<property name="deployment.root" value="./bin" />
+	<property name="src.dir" value="./src" />
+	<property name="dist.type" value=".jar" />
+	<property name="debug" value="on" />
+	<property name="build.web.classes.jar" value="false" />
+	<property name="build.axis.client.jar" value="false" />
+
+	<basename property="project.distname" file="./" />
+
+	<path id="compile.classpath">
+		<pathelement path="${classpath}" />
+		<fileset dir="${runtime.lib.dir}">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+		<fileset dir="${compile.lib.dir}">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+	</path>
+
+	<!-- Build project and create distribution-->
+	<target name="all">
+		<!-- Timestamp for potential use in filenames below-->
+		<tstamp />
+
+		<!-- Clean and copy non java files-->
+		<delete dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<copy todir="${classes.dir}" includeEmptyDirs="no">
+			<fileset dir="${src.dir}">
+				<!--
+				<patternset>
+					<exclude name="**/*.java" />
+				</patternset>
+				-->
+			</fileset>
+		</copy>
+		<!-- Compile-->
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" debug="${debug}">
+            <classpath refid="compile.classpath"/>
+        </javac>
+
+		<!-- Build the type of distribution specified above-->
+		<delete file="./${project.distname}${dist.type}" />
+		<jar jarfile="${project.distname}${dist.type}" basedir="${deployment.root}" />
+
+		<!-- Build jar from web classes directory-->
+		<condition property="Activate.webClasses">
+			<istrue value="${build.web.classes.jar}"/>
+		</condition>
+		<antcall target="webClasses"/>
+
+		<!-- Build jar from axis directory-->
+		<condition property="Activate.axisClient">
+			<istrue value="${build.axis.client.jar}"/>
+		</condition>
+		<antcall target="axisClient"/>
+
+	</target>
+
+	<!-- Build jar from web classes directory-->
+	<target name="webClasses" if="Activate.webClasses">
+		<delete file="./${project.distname}.jar" />
+		<jar jarfile="${project.distname}.jar" basedir="${classes.dir}" />
+	</target>
+	
+	<!-- Build jar from axis directory-->
+	<target name="axisClient" if="Activate.axisClient">
+		<delete file="./${project.distname}-client.jar" />
+		<jar destfile="${project.distname}-client.jar">
+			<fileset dir="${classes.dir}">
+				<patternset>
+					<include name="**/axis/**/*"/>
+					<exclude name="**/axis/*BindingImpl.*" />
+				</patternset>
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- Run a class within the project-->
+	<target name="runJavaTarget">
+	    <path id="project.path">
+			<path refid="compile.classpath" />
+			<pathelement path="${classes.dir}"/>
+	    </path>
+	    
+	    <pathconvert property="project.path.pathconvert" refid="project.path"/>
+		<exec executable="CMD" failonerror="true" >
+			<arg line="/R"/>
+			<arg line="%_JAVACMD% -classpath ${project.path.pathconvert} ${execString}"/>
+		</exec>		
+	</target>
+
+	<!-- Produce javadoc for the project-->
+	<target name="javaDoc">
+		<delete dir="javaDoc" />
+		<javadoc destdir="javaDoc" overview="${src.dir}/overview.html" includenosourcepackages="true" verbose="false">
+			<classpath>
+				<path refid="compile.classpath" />
+				<pathelement path="${classes.dir}"/>
+		    </classpath>
+			<fileset dir="${src.dir}">
+				<include name="**/*.java"/>
+				<exclude name="gov/niarl/his/xsd/integrity_Report_v1_0/**"/>
+				<exclude name="gov/niarl/his/xsd/pcr_difference/**"/>
+			</fileset>
+		</javadoc>
+	</target>
+
+</project>

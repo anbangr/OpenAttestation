@@ -1,0 +1,169 @@
+<!-- This project is built with 'Apache Ant version 1.6.5' and 'java version 1.5' -->
+<project name="HisWebServices" basedir="./" default="server">
+
+	<path id="compile.classpath">
+		<pathelement path="${classpath}" />
+		<pathelement path="${java.class.path}" />
+		<fileset dir="./WEB-INF/lib">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+		<fileset dir="./WEB-INF/jars-compile-only">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+	</path>
+
+	<path id="client.compile.classpath">
+		<pathelement path="${classpath}" />
+		<pathelement path="${java.class.path}" />
+		<fileset dir="./clientlib">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+			<exclude name="HisWebServices-client.jar"/>
+		</fileset>
+	</path>
+
+	<taskdef name="apt" classname="com.sun.tools.ws.ant.Apt">
+		<classpath>
+			<path refid="client.compile.classpath" />
+		</classpath>
+	</taskdef>
+	<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
+		<classpath>
+			<path refid="client.compile.classpath" />
+		</classpath>
+	</taskdef>
+
+	<!-- Build project and create distribution-->
+	<target name="server">
+		<!-- Timestamp for potential use in filenames below-->
+		<tstamp />
+
+		<!-- Clean and copy non java files-->
+		<delete dir="./WEB-INF/classes" />
+		<mkdir dir="./WEB-INF/classes" />
+		<copy todir="./WEB-INF/classes">
+			<fileset dir="./src">
+				<patternset>
+					<exclude name="**/*.java" />
+				</patternset>
+			</fileset>
+		</copy>
+		<!-- Compile-->
+		<apt debug="true" verbose="true" destdir="./WEB-INF/classes" sourcedestdir="./WEB-INF/classes" sourcepath="./src">
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+			<source dir="./src" includes="**/*.java" excludes="**/hisWebService/client/,MainHisWebServices.java" />
+		</apt>
+
+		<!-- Build-->
+		<delete file="./HisWebServices.war" />
+		<jar jarfile="./HisWebServices.war">
+			<fileset dir="./">
+				<exclude name="src/" />
+				<exclude name="WEB-INF/jars-compile-only/" />
+				<exclude name=".classpath" />
+				<exclude name=".project" />
+				<exclude name="build.xml" />
+				<exclude name="clientlib/" />
+				<patternset>
+					<exclude name="**/*.java" />
+				</patternset>
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- Build jar from axis directory-->
+	<target name="client">
+		<delete dir="client" />
+		<mkdir dir="client" />
+		<!-- <delete file="clientlib/HisWebServices-client.jar" />-->
+		<wsimport 
+			debug="true" 
+			verbose="true" 
+			keep="true" 
+			destdir="client" 
+			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
+			wsdl="http://localhost:8080/HisWebServices/hisWebService?wsdl" />
+		<wsimport 
+			debug="true" 
+			verbose="true" 
+			keep="true" 
+			destdir="client" 
+			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
+			wsdl="http://localhost:8080/HisWebServices/hisWebServiceFactoryService?wsdl" />
+		<wsimport 
+			debug="true" 
+			verbose="true" 
+			keep="true" 
+			destdir="client" 
+			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
+			wsdl="http://localhost:8080/HisWebServices/hisEnrollmentWebService?wsdl" />
+		<wsimport 
+			debug="true" 
+			verbose="true" 
+			keep="true" 
+			destdir="client" 
+			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
+			wsdl="http://localhost:8080/HisWebServices/hisPollingWebService?wsdl" />
+		<apt debug="true" verbose="true" destdir="client" sourcedestdir="client" sourcepath="./src">
+			<classpath>
+				<path refid="client.compile.classpath" />
+				<pathelement path="client"/>
+			</classpath>
+			<source dir="./src" includes="**/hisWebService/client/**/*.java,**/hisWebService/*" />
+		</apt>
+		<jar jarfile="clientlib/HisWebServices-client.jar" basedir="client" />
+		<delete dir="client" />
+	</target>
+
+	<target name="clientInvoker">
+		<delete dir="client" />
+		<mkdir dir="client" />
+		<copy todir="client" includeEmptyDirs="no">
+			<fileset dir="./src">
+				<include name="MainHisWebServices.java" />
+			</fileset>
+		</copy>
+        <javac srcdir="client" destdir="client" debug="true">
+			<classpath>
+				<fileset dir="./clientlib">
+					<include name="**/*.jar" />
+					<include name="**/*.zip" />
+				</fileset>
+				<pathelement path="./client"/>
+			</classpath>
+        </javac>
+		<java classname="MainHisWebServices" fork="true">
+			<classpath>
+				<fileset dir="./clientlib">
+					<include name="**/*.jar" />
+					<include name="**/*.zip" />
+				</fileset>
+				<pathelement path="./client"/>
+			</classpath>
+		</java>
+		<delete dir="client" />
+	</target>
+
+	<!-- Produce javadoc for the project-->
+	<target name="javaDoc">
+		<delete dir="javaDoc" />
+		<javadoc destdir="javaDoc" overview="./src/overview.html" includenosourcepackages="true" verbose="false">
+			<classpath>
+				<path refid="compile.classpath" />
+				<pathelement path="./WEB-INF/classes"/>
+				<fileset dir="./clientlib">
+					<include name="**/*.jar" />
+					<include name="**/*.zip" />
+				</fileset>
+		    </classpath>
+			<fileset dir="./src">
+				<include name="**/*.java"/>
+			</fileset>
+		</javadoc>
+	</target>
+
+</project>

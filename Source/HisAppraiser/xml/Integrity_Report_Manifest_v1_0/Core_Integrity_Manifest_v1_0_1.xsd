@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.trustedcomputinggroup.org/XML/SCHEMA/Core_Integrity_v1_0_1#" targetNamespace="http://www.trustedcomputinggroup.org/XML/SCHEMA/Core_Integrity_v1_0_1#" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0.1">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
+	<!--<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="./xmldsig-core-schema.xsd"/>
+	 -->
+	<xs:complexType name="AssertionType" abstract="false">
+		<xs:sequence>
+			<xs:any namespace="##other" processContents="lax"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:ID"/>
+	</xs:complexType>
+	<xs:complexType name="ComponentIDType">
+		<xs:sequence>
+			<xs:element name="VendorID" type="VendorIdType"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:ID" use="required"/>
+		<xs:attribute name="SimpleName" type="xs:normalizedString" use="optional"/>
+		<xs:attribute name="ModelName" type="xs:normalizedString" use="optional"/>
+		<xs:attribute name="ModelNumber" type="xs:normalizedString" use="optional"/>
+		<xs:attribute name="ModelSerialNumber" type="xs:normalizedString" use="optional"/>
+		<xs:attribute name="ModelSystemClass" type="xs:normalizedString" use="optional"/>
+		<xs:attribute name="VersionMajor" type="xs:integer" use="optional"/>
+		<xs:attribute name="VersionMinor" type="xs:integer" use="optional"/>
+		<xs:attribute name="VersionBuild" type="xs:integer" use="optional"/>
+		<xs:attribute name="VersionString" type="xs:normalizedString" use="optional"/>
+		<xs:attribute name="MfgDate" type="xs:dateTime" use="optional"/>
+		<xs:attribute name="PatchLevel" type="xs:normalizedString" use="optional"/>
+		<xs:attribute name="DiscretePatches" type="xs:NMTOKENS" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="ComponentRefType">
+		<xs:choice>
+			<xs:element name="ComponentID">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="ComponentIDType"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ComponentIDREF" type="xs:IDREF"/>
+		</xs:choice>
+		<xs:attribute name="ComponentLoc" type="xs:anyURI" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="ConfidenceValueType">
+		<xs:attribute name="Score" type="xs:integer" use="required"/>
+		<xs:attribute name="Basis" type="xs:integer" use="required"/>
+		<xs:attribute name="Authority" type="xs:anyURI" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="DigestMethodType">
+		<xs:complexContent>
+			<xs:extension base="ds:DigestMethodType">
+				<xs:attribute name="Id" type="xs:ID" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DigestValueType">
+		<xs:simpleContent>
+			<xs:extension base="ds:DigestValueType">
+				<xs:attribute name="Id" type="xs:ID" use="required"/>
+				<xs:attribute name="AlgRef" type="xs:IDREF" use="required"/>
+				<xs:attribute name="TransformRefs" type="xs:IDREFS"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="HashedURIType">
+		<xs:sequence minOccurs="0">
+			<xs:element name="UriHash" type="DigestValueType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="UriValue" type="xs:anyURI" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="HashType">
+		<xs:simpleContent>
+			<xs:extension base="DigestValueType">
+				<xs:attribute name="ExtendOrder" type="xs:IDREFS"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="IntegrityManifestType" abstract="true">
+		<xs:sequence>
+			<xs:element name="ComponentID" type="ComponentIDType"/>
+			<xs:element name="SignerInfo" type="SignerInfoType" minOccurs="0"/>
+			<xs:element name="ConfidenceValue" type="ConfidenceValueType" minOccurs="0"/>
+			<xs:element name="Collector" type="ComponentRefType" minOccurs="0"/>
+			<xs:element name="TransformMethod" type="TransformMethodType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="DigestMethod" type="DigestMethodType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Values" type="ValueType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="AssertionInfo" type="AssertionType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="PlatformClass" type="PlatformClassType" minOccurs="0"/>
+			<xs:element name="SubComponents" type="ComponentRefType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:ID" use="required"/>
+		<xs:attribute name="RevLevel" type="xs:integer" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="PlatformClassType">
+		<xs:attribute name="Class" type="xs:anyURI" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="SignerInfoType">
+		<xs:sequence>
+			<xs:element ref="ds:Signature"/>
+			<xs:element name="SigningComponent" type="ComponentRefType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="DateTime" type="xs:dateTime"/>
+		<xs:attribute name="Nonce" type="xs:base64Binary"/>
+	</xs:complexType>
+	<xs:complexType name="TransformMethodType">
+		<xs:complexContent>
+			<xs:extension base="ds:TransformType">
+				<xs:attribute name="Id" type="xs:ID" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ValueType">
+		<xs:sequence>
+			<xs:any namespace="##other" processContents="lax"/>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:ID"/>
+	</xs:complexType>
+	<xs:complexType name="VendorIdType">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="TcgVendorId">
+				<xs:simpleType>
+					<xs:restriction base="xs:normalizedString">
+						<xs:maxLength value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SmiVendorId" type="xs:integer"/>
+			<xs:element name="VendorGUID" type="xs:NMTOKEN"/>
+		</xs:choice>
+		<xs:attribute name="Name" type="xs:normalizedString"/>
+	</xs:complexType>
+</xs:schema>

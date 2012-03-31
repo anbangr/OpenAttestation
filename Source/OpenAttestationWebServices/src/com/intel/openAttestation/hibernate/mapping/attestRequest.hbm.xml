@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.intel.openAttestation.hibernate.domain.AttestRequest" table="attest_request">
+		<id name="id" column="id" type="long" unsaved-value="null">
+			<generator class="native" />
+		</id>
+		<property name="requestId" column="request_id"/>
+		<property name="hostName" column="host_name"/>
+		<property name="requestTime" column="request_time"/>
+		<property name="nextAction" column="next_action"/>
+		<property name="isConsumedByPollingWS" column="is_consumed_by_pollingWS"/>
+		<many-to-one name="auditLog" class="gov.niarl.hisAppraiser.hibernate.domain.AuditLog" lazy="false" column="audit_log_id" unique="true"/>
+		<many-to-one  name="machineCert"  class="gov.niarl.hisAppraiser.hibernate.domain.MachineCert" lazy="false" column="host_id"/>
+		<property name="requestHost" column="request_host"/>
+	    <property name="count"/>
+	    <property name="PCRMask"></property>
+	    <property name="isSync" column="is_sync"/>
+	    <property name="result"/>
+	    <property name="validateTime" column="validate_time"/>
+	</class>
+</hibernate-mapping>
+

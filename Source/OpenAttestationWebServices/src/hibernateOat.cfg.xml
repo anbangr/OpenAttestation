@@ -1,0 +1,41 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<!-- Database connection settings -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+	    <property name="connection.url">jdbc:mysql://localhost:3306/oat_db</property>
+		 <property name="connection.username">root</property>
+		<property name="connection.password">oat-password</property>
+		<!-- Use the C3P0 connection pool.-->
+		<property name="c3p0.min_size">1</property>
+		<property name="c3p0.max_size">10</property>
+		<property name="c3p0.timeout">1800</property>
+		<property name="c3p0.acquire_increment">1</property>
+		<property name="c3p0.idle_test_period">300</property>
+		<!-- SQL dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<!-- Enable Hibernate's automatic session context management -->
+		<property name="current_session_context_class">thread</property>
+		<property name="hibernate.query.factory_class">org.hibernate.hql.classic.ClassicQueryTranslatorFactory</property> 
+		<!-- Disable the second-level cache -->
+		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+		<property name="hibernate.cache.use_second_level_cache">false</property>
+		<property name="hibernate.transaction.flush_before_completion">true</property>
+
+		<!-- Echo all executed SQL to stdout -->
+		<property name="show_sql">false</property>
+
+		<!-- Drop and re-create the database schema on startup -->
+		<!-- <property name="hbm2ddl.auto">create</property> -->
+
+		 
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/audit_log.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/machine_cert.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/alerts.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/system_constants.hbm.xml"/>
+		<mapping resource="com/intel/openAttestation/hibernate/mapping/attestRequest.hbm.xml"/>
+	</session-factory>
+</hibernate-configuration>

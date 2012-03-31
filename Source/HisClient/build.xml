@@ -1,0 +1,54 @@
+<project name="HisClient" basedir="./" default="build">
+
+	<path id="compile.classpath">
+		<pathelement path="${classpath}" />
+		<pathelement path="${java.class.path}" />
+		<fileset dir="./lib">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+	</path>
+
+	<!-- Build project and create distribution-->
+	<target name="build">
+		<!-- Timestamp for potential use in filenames below-->
+		<tstamp />
+
+		<!-- Clean and copy non java files-->
+		<delete dir="./bin" />
+		<mkdir dir="./bin" />
+		<copy todir="./bin">
+			<fileset dir="./src">
+				<patternset>
+					<exclude name="**/*.java" />
+				</patternset>
+			</fileset>
+		</copy>
+		<!-- Compile-->
+		<javac srcdir="./src" destdir="./bin" debug="true">
+			<classpath refid="compile.classpath"/>
+		</javac>
+
+		<!-- Build-->
+		<delete file="./jar/OAT_Standalone.jar" />
+		<jar jarfile="./jar/OAT_Standalone.jar">
+			<manifest>
+				<attribute name = "Main-Class" value = "gov.niarl.his.StandaloneHIS"/>
+				<attribute name = "Class-Path" 
+					 value = "lib/activation.jar lib/am_sdk.jar lib/am_services.jar lib/amclientsdk.jar
+					          lib/commons-beanutils.jar lib/commons-collections.jar lib/commons-digester.jar
+                                                  lib/commons-logging.jar lib/GeneralUtilities.jar lib/jaas.jar lib/jax-qname.jar
+                                                  lib/jaxb-api.jar lib/jaxb-impl.jar lib/jaxb-libs.jar lib/jaxb-xjc.jar
+                                                  lib/jta-spec1_0_1.jar lib/log4j-1.2.14.jar lib/mail.jar lib/namespace.jar
+                                                  lib/relaxngDatatype.jar lib/servlet-api.jar lib/TokenUtil.jar lib/xsdlib.jar
+                                                  lib/bbxasc.jar lib/bbxcore.jar lib/bbxdatamodel.jar lib/bbxutil.jar lib/FastInfoset.jar
+				        	 					  lib/HisAuthenticationWebService-client.jar lib/http.jar lib/jaxws-api.jar 
+                                                  lib/jaxws-rt.jar lib/jaxws-tools.jar lib/jsr173_api.jar lib/jsr181-api.jar
+                                                  lib/jsr250-api.jar lib/mimepull.jar lib/resolver.jar lib/saaj-api.jar lib/saaj-impl.jar
+                                                  lib/stax-ex.jar lib/streambuffer.jar lib/woodstox.jar lib/HisWebServices-client.jar lib/uuid-3.2.jar"/>
+			</manifest>
+			<fileset dir="./bin"/>
+		</jar>
+	</target>
+
+</project>

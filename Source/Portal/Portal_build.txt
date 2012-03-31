@@ -1,0 +1,11 @@
+**************
+* Web Portal *
+**************
+
+BUILD INSTRUCTIONS
+
+The HIS Web Portal needs to be placed in /var/www/html on a Linux server. It depends on the installation of the HIS Appraiser to operate. The HIS Appraiser sets up the MySQL database, installs Apache, and installs PHP.
+
+Following the installation of a HIS Appraiser the Web Portal can be placed in /var/www/html. The only change that is needed is to edit the dbconnect.php file in the includes folder. This file needs to be populated with MySQL access information.
+
+Optionally, htaccess files can be loaded into folders created by the HIS Web Portal. These files are not provided by default. The HIS Appraiser does turn on the various Apache configuration flags that enable their use.

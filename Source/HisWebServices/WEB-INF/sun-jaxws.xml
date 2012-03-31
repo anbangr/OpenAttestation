@@ -1,0 +1,18 @@
+<endpoints xmlns='http://java.sun.com/xml/ns/jax-ws/ri/runtime' version='2.0'>
+    <endpoint
+        name='hisWebServiceFactoryService'
+        implementation='gov.niarl.sal.webservices.hisWebService.server.HisWebServiceFactoryService'
+        url-pattern='/hisWebServiceFactoryService'/>
+    <endpoint
+        name='hisWebService'
+        implementation='gov.niarl.sal.webservices.hisWebService.server.HisWebService'
+        url-pattern='/hisWebService'/>
+    <endpoint
+        name='hisEnrollmentWebService'
+        implementation='gov.niarl.sal.webservices.hisWebService.server.HisEnrollmentWebService'
+        url-pattern='/hisEnrollmentWebService'/>
+    <endpoint
+        name='hisPollingWebService'
+        implementation='gov.niarl.sal.webservices.hisWebService.server.HisPollingWebService'
+        url-pattern='/hisPollingWebService'/>
+</endpoints>

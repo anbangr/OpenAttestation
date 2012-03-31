@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.intel.openAttestation.manifest.hibernate.domain.PCRManifest" table="PCR_manifest">
+		<id name="index" column="`index`" type="long" unsaved-value="null">
+			<generator class="native" />
+		</id>
+		<property name="PCRNumber" column="PCR_number"/>
+		<property name="PCRValue" column="PCR_value"/>
+		<property name="PCRDesc" column="PCR_desc"/>
+		<property name="createTime" column="create_time"/>
+		<property name="createRequestHost" column="create_request_host"/>
+		<property name="lastUpdateTime" column="last_update_time"/>
+		<property name="lastUpdateRequestHost" column="last_update_request_host"/>
+	</class>
+</hibernate-mapping>

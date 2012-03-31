@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:gov:niarl:his:xsd:pcr_difference"
+	elementFormDefault="qualified">
+	<xs:element name="PCR_Difference_Report">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Machine_Name" type="xs:string" />
+				<xs:element name="PCR_Description" type="xs:string" />
+				<xs:element name="PCR_Number" type="xs:integer" />
+				<xs:element name="Previous_Value">
+					<xs:complexType>
+						<xs:attribute name="Report_ID" type="xs:string" />
+						<xs:attribute name="Timestamp" type="xs:dateTime" />
+						<xs:attribute name="Value" type="xs:string" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Current_Value">
+					<xs:complexType>
+						<xs:attribute name="Report_ID" type="xs:string" />
+						<xs:attribute name="Timestamp" type="xs:dateTime" />
+						<xs:attribute name="Value" type="xs:string" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Previous_Current">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Value" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

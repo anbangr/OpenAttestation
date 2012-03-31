@@ -1,0 +1,272 @@
+/*2012, U.S. Government, National Security Agency, National Information Assurance Research Laboratory
+
+This is a work of the UNITED STATES GOVERNMENT and is not subject to copyright protection in the United States. Foreign copyrights may apply.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+- Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+- Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+- Neither the name of the NATIONAL SECURITY AGENCY/NATIONAL INFORMATION ASSURANCE RESEARCH LABORATORY nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+
+/* GLOBAL STYLES */
+* {
+margin:0;
+padding:0;
+font-family: Arial, Helvetica, sans-serif;
+}
+
+html {
+background-color: gray;
+}
+
+a img {
+border: none;
+vertical-align: middle;
+}
+
+td img {
+display: block;
+margin: 0 auto;
+}
+
+button img {
+vertical-align: text-top;
+}
+
+/* CLASSIFICATION STYLES */
+#classification .ufouo {
+color: yellow;
+background-color: green;
+text-align: center;
+width: 100%;
+font-size: small;
+font-variant: small-caps;
+}
+
+/* WRAPPER STYLES */
+#wrapper {
+margin: 2%;
+min-width: 900px;
+}
+
+/* HEADER STYLES */
+#header {
+color: white;
+background-color: maroon;
+clear: both;
+min-height: 116px;
+-moz-border-radius: 9px;
+-webkit-border-radius: 9px;
+border-radius: 9px;
+}
+
+#header .leftcol {
+float: left;
+padding: 12px;
+}
+
+#header .rightcol {
+margin-left: 258px;
+padding: 12px;
+}
+
+#header h1 {
+margin-bottom: 9px;
+}
+
+#header h2 {
+margin-bottom: 9px;
+}
+
+#header p {
+margin-bottom: 6px;
+}
+
+/* NAVIGATION STYLES */
+#navigation {
+color: white;
+border: 3px solid white;
+-moz-border-radius: 9px;
+-webkit-border-radius: 9px;
+border-radius: 9px;
+background-color: black;
+clear: both;
+margin: 12px;
+}
+
+#navigation li {
+margin-top: 12px;
+margin-bottom: 12px;
+display: inline-block;
+list-style-type: none;
+}
+
+#navigation a {
+padding: 12px;
+color: white;
+text-decoration: none;
+}
+
+#navigation a:hover {
+-moz-border-radius: 9px;
+-webkit-border-radius: 9px;
+border-radius: 9px;
+background-color: #333333;
+}
+
+/* PAGE SELECTOR STYLES */
+#pageselector {
+text-align: center;
+margin: 12px;
+font-weight: bold;
+min-height: 46px;
+}
+
+#pageselector li {
+margin-top: 12px;
+margin-bottom: 12px;
+display: inline;
+list-style-type: none;
+}
+
+#pageselector .currentpage {
+padding: 12px;
+border: 3px solid maroon;
+-moz-border-radius: 9px;
+-webkit-border-radius: 9px;
+border-radius: 9px;
+}
+
+#pageselector a {
+color: black;
+padding: 12px;
+border: 3px solid #dddddd;
+-moz-border-radius: 9px;
+-webkit-border-radius: 9px;
+border-radius: 9px;
+}
+
+#pageselector a:hover {
+background-color: #dddddd;
+}
+
+/* CONTENT STYLES */
+#content {
+background-color: white;
+clear: both;
+-moz-border-radius: 9px;
+-webkit-border-radius: 9px;
+border-radius: 9px;
+}
+
+#content table {
+width: 100%;
+}
+
+#content .leftcol {
+float: left;
+width: 120px;
+}
+
+#content .leftcol li {
+list-style-type: none;
+}
+
+#content .leftcol a {
+color: black;
+display: block;
+float: left;
+width: 100%;
+padding: 12px;
+text-decoration: none;
+}
+
+#content .leftcol a:hover {
+background-color: #dddddd;
+-moz-border-radius: 9px;
+-webkit-border-radius: 9px;
+border-radius: 9px;
+}
+
+#content .rightcol {
+margin-left: 144px;
+padding: 12px;
+}
+
+#content th {
+padding: 8px;
+background-color: maroon;
+color: white;
+}
+
+#content th a {
+color:white;
+}
+
+#content td {
+padding: 4px;
+background-color: #dddddd;
+}
+
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+margin-bottom: 12px;
+}
+
+#content h6 {
+text-align: right;
+}
+
+#content p, #content table {
+margin-bottom: 8px;
+}
+
+#content textarea {
+width: 99%;
+}
+
+#content .controlbuttons {
+text-align: center;
+margin:12px;
+}
+
+/* FOOTER STYLES */
+#footer {
+margin:12px;
+border: 3px solid white;
+-moz-border-radius: 9px;
+-webkit-border-radius: 9px;
+border-radius: 9px;
+color: white;
+background-color: black;
+clear: both;
+min-height: 116px;
+}
+
+#footer .leftcol {
+float: left;
+padding: 12px;
+}
+
+#footer .rightcol {
+margin-left: 258px;
+padding:12px;
+font-family: Arial, Helvetica, sans-serif;
+}
+
+#footer h1 {
+font-size: large;
+margin-bottom: 9px;
+}
+
+#footer h2 {
+font-size: medium;
+margin-bottom: 9px;
+}
+
+#footer a {
+color: white;
+}

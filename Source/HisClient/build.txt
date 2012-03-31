@@ -1,0 +1,12 @@
+Build Instructions:
+
+JAVA Project:
+
+The JAVA project is designed to be loaded into an IDE such as Netbeans ot Eclipse with the /src directory set for the existing source files and all of the jar files in /lib added to the project.  If compiling a jar the gov.niarl.his.StandaloneHIS main method should be set the execution point for the jar.  
+
+Instructions to run and configure the project is located in the official project documentation / wiki.  Runtime file placement is also spelled out in these documents.
+
+Inno Setup Project
+
+The HIS-installer.iss file is compiled by Inno Setup v5.1.7 and requires all of the files to be loaded into the install archive to be placed according to the locations in the .iss script.  
+
