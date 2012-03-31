@@ -14,6 +14,21 @@ echo -e "$1:------------\033[31;49;5;1m [ Failed ]\033[0m"
 exit 0
 }
 
+
+mkdir -p $OAT_SOURCE/HisClient/lib
+mkdir -p $OAT_SOURCE/HisPrivacyCAWebServices2/clientlib
+mkdir -p $OAT_SOURCE/HisPrivacyCAWebServices2/ClientFiles/lib 
+mkdir -p $OAT_SOURCE/HisPrivacyCAWebServices2/WEB-INF/lib
+mkdir -p $OAT_SOURCE/OpenAttestationAdminConsole/WebContent/WEB-INF/lib 
+mkdir -p $OAT_SOURCE/HisAppraiser/lib
+mkdir -p $OAT_SOURCE/PrivacyCA/lib
+mkdir -p $OAT_SOURCE/OpenAttestationWebServices/WebContent/WEB-INF/lib
+mkdir -p $OAT_SOURCE/HisWebServices/clientlib
+mkdir -p $OAT_SOURCE/HisWebServices/WEB-INF/lib
+mkdir -p $OAT_SOURCE/OpenAttestationManifestWebServices/WebContent/WEB-INF/lib
+mkdir -p $OAT_SOURCE/HisPrivacyCAWebServices2/WEB-INF/jars-compile-only/
+mkdir -p $OAT_SOURCE/HisWebServices/WEB-INF/jars-compile-only/
+
 if test -e $JAR_SOURCE/activation.jar;then
   cp -nrf $JAR_SOURCE/activation.jar $OAT_SOURCE/HisClient/lib/activation.jar
   cp -nrf $JAR_SOURCE/activation.jar $OAT_SOURCE/HisPrivacyCAWebServices2/clientlib/activation.jar
@@ -27,6 +42,7 @@ if test -e $JAR_SOURCE/activation.jar;then
   cp -nrf $JAR_SOURCE/activation.jar $OAT_SOURCE/HisWebServices/WEB-INF/lib/activation.jar
   cp -nrf $JAR_SOURCE/activation.jar $OAT_SOURCE/OpenAttestationManifestWebServices/WebContent/WEB-INF/lib/activation.jar
   if test -d $OAT_SOURCE/TSSCoreService;then
+	mkdir $OAT_SOURCE/TSSCoreService/lib
   	cp -nrf $JAR_SOURCE/activation.jar $OAT_SOURCE/TSSCoreService/lib/activation.jar
   fi
 else

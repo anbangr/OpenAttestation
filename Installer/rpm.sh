@@ -55,13 +55,7 @@ CreatNiarlOatStandalone()
    rm -rf  NIARL_OAT_Standalone
   fi
   mkdir NIARL_OAT_Standalone
-
-  if test -e $OATSOURCE_DIRECTORY/PrivacyCA/TrustStore.jks;then
-    cp $OATSOURCE_DIRECTORY/PrivacyCA/TrustStore.jks NIARL_OAT_Standalone
-  else
-    ShowLogFaild "$OATSOURCE_DIRECTORY/PrivacyCA/TrustStore.jks"
-  fi
-
+ 
   if test -e $OATSOURCE_DIRECTORY/HisClient/OAT07.jpg;then
     cp $OATSOURCE_DIRECTORY/HisClient/OAT07.jpg  NIARL_OAT_Standalone
   else

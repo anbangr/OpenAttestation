@@ -42,7 +42,6 @@ rm -rf %{buildroot}/OAT/lib
 rm -f %{buildroot}/OAT/OAT.properties
 rm -f %{buildroot}/OAT/OAT07.jpg
 rm -f %{buildroot}/OAT/OAT_Standalone.jar
-rm -f %{buildroot}/OAT/TrustStore.jks
 rm -f %{buildroot}/OAT/etc/rc5.d/S99OAT
 rm -f %{buildroot}/OAT/etc/init.d/OAT.sh
 
@@ -50,7 +49,6 @@ rm -f %{buildroot}/OAT/etc/init.d/OAT.sh
 /OAT/OAT.sh
 /OAT/OAT07.jpg
 /OAT/OAT_Standalone.jar
-/OAT/TrustStore.jks
 /OAT/log4j.properties
 #/OAT/OAT.properties
 /OAT/lib/FastInfoset.jar
