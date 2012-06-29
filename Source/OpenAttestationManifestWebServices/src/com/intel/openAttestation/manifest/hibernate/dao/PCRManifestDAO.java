@@ -16,13 +16,10 @@ package com.intel.openAttestation.manifest.hibernate.dao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
-
 import com.intel.openAttestation.manifest.hibernate.domain.PCRManifest;
 import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
-
 
 /**
  * This class serves as a central location for updates and queries against 
@@ -38,32 +35,40 @@ public class PCRManifestDAO {
 	 * already been started 
 	 */
 	public PCRManifestDAO() {
-		System.out.println("before");
-		//HibernateUtilHis.beginTransaction();
-		System.out.println("after");
 	}
 	
 	public List<PCRManifest> getAllPCREntries(){
-		HibernateUtilHis.beginTransaction();
-		ArrayList<PCRManifest> PCRList = new ArrayList<PCRManifest>();
-		Query query = HibernateUtilHis.getSession().createQuery("from PCRManifest pcrmanifest");
-		System.out.println("query:"+query.toString());
-		List list = query.list();
-		for (int i=0;i<list.size();i++){
-			PCRList.add((PCRManifest)list.get(i));
+		try{
+			HibernateUtilHis.beginTransaction();
+			ArrayList<PCRManifest> PCRList = new ArrayList<PCRManifest>();
+			Query query = HibernateUtilHis.getSession().createQuery("from PCRManifest pcrmanifest");
+			System.out.println("query:"+query.toString());
+			List list = query.list();
+			for (int i=0;i<list.size();i++){
+				PCRList.add((PCRManifest)list.get(i));
+			}
+			HibernateUtilHis.commitTransaction();
+			return PCRList;
+		}catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
 		}
-		HibernateUtilHis.closeSession();
-		return PCRList;
+		
 	}
 	
 	public PCRManifest addPCREntry(PCRManifest pcr){
-		HibernateUtilHis.beginTransaction();
 		try {
+			HibernateUtilHis.beginTransaction();
 			pcr.setCreateTime(new Date());
 			HibernateUtilHis.getSession().save(pcr);
+			HibernateUtilHis.commitTransaction();
 			return pcr;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -72,8 +77,8 @@ public class PCRManifestDAO {
 	}
 	
 	public PCRManifest updatePCREntry (PCRManifest pcr){
-		HibernateUtilHis.beginTransaction();		
 		try {
+			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
 			pcr.setLastUpdateTime(new Date());
 			
@@ -89,10 +94,11 @@ public class PCRManifestDAO {
 			pcrOld.setPCRDesc(pcr.getPCRDesc());
 			pcrOld.setPCRNumber(pcr.getPCRNumber());
 			pcrOld.setPCRValue(pcr.getPCRValue());
-			session.flush();
+			HibernateUtilHis.commitTransaction();
 			return pcr;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -101,14 +107,15 @@ public class PCRManifestDAO {
 	}
 
 	public void deletePCREntry (PCRManifest pcr){
-		HibernateUtilHis.beginTransaction();
 		try {
+			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
 			pcr = (PCRManifest)session.load(PCRManifest.class, pcr.getIndex());
 			session.delete(pcr);
-			session.flush();
+			HibernateUtilHis.commitTransaction();
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -116,8 +123,8 @@ public class PCRManifestDAO {
 		
 	}
 	public void deletePCREntry (Long index){
-		HibernateUtilHis.beginTransaction();
 		try {
+			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
 			Query query = session.createQuery("from PCRManifest a where a.index = :index");
 			query.setLong("index", index);
@@ -127,9 +134,10 @@ public class PCRManifestDAO {
 			}
 			PCRManifest pcr = (PCRManifest)list.get(0);
 			session.delete(pcr);
-			session.flush();
+			HibernateUtilHis.commitTransaction();
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -138,20 +146,23 @@ public class PCRManifestDAO {
 	}
 
 	public List<PCRManifest> queryPCREntryByIndex (long index){
-
-		HibernateUtilHis.beginTransaction();
+		List<PCRManifest> pcrs = null;
 		try {
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from PCRManifest a where a.index = :index");
 			query.setLong("index", index);
 			List list = query.list();
 		
 			if (list.size() < 1) {
-				return new ArrayList<PCRManifest>();
+				pcrs = new ArrayList<PCRManifest>();
 			} else {
-				return (List<PCRManifest>)list;
+				pcrs = (List<PCRManifest>)list;
 			}
+			HibernateUtilHis.commitTransaction();
+			return pcrs;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -160,19 +171,22 @@ public class PCRManifestDAO {
 	}
 
 	public List<PCRManifest> queryPCREntry (int PCRNumber){
-
-		HibernateUtilHis.beginTransaction();
+		List<PCRManifest> pcrs = null;
 		try {
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from PCRManifest a where a.PCRNumber = :number");
 			query.setLong("number", PCRNumber);
 			List list = query.list();
 			if (list.size() < 1) {
-				return new ArrayList<PCRManifest>();
+				pcrs = new ArrayList<PCRManifest>();
 			} else {
-				return (List<PCRManifest>)list;
+				pcrs = (List<PCRManifest>)list;
 			}
+			HibernateUtilHis.commitTransaction();
+			return pcrs;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -181,19 +195,22 @@ public class PCRManifestDAO {
 	}
 
 	public List<PCRManifest> queryPCREntry (String PCRDesc){
-
-		HibernateUtilHis.beginTransaction();
+		List<PCRManifest> pcrs = null;
 		try {
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().
 					createQuery("from PCRManifest a where a.PCRDesc like '%"+PCRDesc+"%'");
 			List list = query.list();
 			if (list.size() < 1) {
-				return new ArrayList<PCRManifest>();
+				pcrs = new ArrayList<PCRManifest>();
 			} else {
-				return (List<PCRManifest>)list;
+				pcrs = (List<PCRManifest>)list;
 			}
+			HibernateUtilHis.commitTransaction();
+			return pcrs;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -202,20 +219,23 @@ public class PCRManifestDAO {
 	}
 
 	public List<PCRManifest> queryPCREntry (int PCRNumber, String PCRDesc){
-
-		HibernateUtilHis.beginTransaction();
+		List<PCRManifest> pcrs = null;
 		try {
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().
 					createQuery("from PCRManifest a where a.PCRNumber=:number and a.PCRDesc like '%"+PCRDesc+"%'");
 			query.setLong("number", PCRNumber);
 			List list = query.list();
 			if (list.size() < 1) {
-				return new ArrayList<PCRManifest>();
+				pcrs = new ArrayList<PCRManifest>();
 			} else {
-				return (List<PCRManifest>)list;
+				pcrs = (List<PCRManifest>)list;
 			}
+			HibernateUtilHis.commitTransaction();
+			return pcrs;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -224,21 +244,24 @@ public class PCRManifestDAO {
 	}
 	
 	public boolean validatePCR (int PCRNumber, String PCRValue){
-
-		HibernateUtilHis.beginTransaction();
+		boolean flag =false;
 		try {
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().
 					createQuery("from PCRManifest a where a.PCRNumber=:number and a.PCRValue=:value");
 			query.setLong("number", PCRNumber);
 			query.setString("value", PCRValue);
 			List list = query.list();
 			if (list.size() < 1) {
-				return false;
+				flag =  false;
 			} else {
-				return true;
+				flag = true;
 			}
+			HibernateUtilHis.commitTransaction();
+			return flag;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -247,41 +270,50 @@ public class PCRManifestDAO {
 	}
 
 	public boolean isPCRExisted(long index){
-		HibernateUtilHis.beginTransaction();
+		boolean flag =false;
 		try {
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from PCRManifest a where a.index = :index");
 			query.setLong("index", index);
 			List list = query.list();
 		
 			if (list.size() < 1) {
-				return false;
+				flag =  false;
 			} else {
-				return true;
+				flag = true;
 			}
+			HibernateUtilHis.commitTransaction();
+			return flag;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
 		}
+		
 
 	}
 	
 	public boolean isPCRExisted(int pcrNumber, String pcrValue){
-		HibernateUtilHis.beginTransaction();
+		boolean flag =false;
 		try {
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from PCRManifest a where a.PCRNumber = :number and a.PCRValue = :value");
 			query.setInteger("number", pcrNumber);
 			query.setString("value", pcrValue);
 			List list = query.list();
 		
 			if (list.size() < 1) {
-				return false;
+				flag =  false;
 			} else {
-				return true;
+				flag = true;
 			}
+			HibernateUtilHis.commitTransaction();
+			return flag;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
@@ -289,8 +321,9 @@ public class PCRManifestDAO {
 	}
 
 	public boolean isPCRExisted(int pcrNumber, String pcrValue, long exceptIndex){
-		HibernateUtilHis.beginTransaction();
+		boolean flag = false;
 		try {
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from PCRManifest a " +
 					"where a.PCRNumber = :number and a.PCRValue = :value and a.index <> :exceptIndex");
 			query.setInteger("number", pcrNumber);
@@ -299,12 +332,15 @@ public class PCRManifestDAO {
 			List list = query.list();
 		
 			if (list.size() < 1) {
-				return false;
+				flag =  false;
 			} else {
-				return true;
+				flag = true;
 			}
+			HibernateUtilHis.commitTransaction();
+			return flag;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();

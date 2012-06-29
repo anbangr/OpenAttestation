@@ -62,5 +62,5 @@ public class ReqAttestationBean {
 	public void setTimeThreshold(Long timeThreshold) {
 		this.timeThreshold = timeThreshold;
 	}
-
+	
 }

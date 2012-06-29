@@ -42,15 +42,15 @@ public class ListAsyncRequest  extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-	    List<AttestRequest> attestRequests = new ArrayList<AttestRequest>();
+	    List<ReqAsyncStatusBean> attestRequests = new ArrayList<ReqAsyncStatusBean>();
 		WebResource resource = AttestUtil.getClient(AttestUtil.getAttestationWebServicesUrl());
 		ClientResponse allRequestsResponse = resource.path("/AllRequests").type("application/json").
 				header("Auth_blob", "").accept("application/json").get(ClientResponse.class);
 		if (allRequestsResponse.getStatus()== ClientResponse.Status.OK.getStatusCode()){
-			attestRequests =  allRequestsResponse.getEntity(new GenericType<List<AttestRequest>>(){});
+			attestRequests =  allRequestsResponse.getEntity(new GenericType<List<ReqAsyncStatusBean>>(){});
 			 if (attestRequests.size()>0){
 				
-				 req.setAttribute("all_requests",getReqAsyncStatusBean(attestRequests));
+				 req.setAttribute("all_requests",attestRequests);
 			 }
 			 else{
 				 req.setAttribute("message", "no requests");
@@ -71,42 +71,4 @@ public class ListAsyncRequest  extends HttpServlet{
 		this.doGet(req, resp);
 	}
 	
-	public List<ReqAsyncStatusBean> getReqAsyncStatusBean(List<AttestRequest> reqs){
-		 List<ReqAsyncStatusBean> requests = new ArrayList<ReqAsyncStatusBean>();
-	     	HashMap<String,ReqAsyncStatusBean> map = new HashMap<String,ReqAsyncStatusBean>();
-     		for (AttestRequest req: reqs){
-     			if (!map.containsKey(req.getRequestId())){
-     				ReqAsyncStatusBean request = new ReqAsyncStatusBean();
-     				request.setRequestId(req.getRequestId());
-     				request.setHosts(req.getHostName());
-     				request.setPCRMask(req.getPCRMask());
-     				request.setRequestTime(req.getRequestTime());
-     				request.setCount(req.getCount());
-     				request.setResult(true);
-     				if (req.getResult()==null)
-     					request.setResult(false);
-     				map.put(req.getRequestId(), request);
-     			}
-     			else{
-     				ReqAsyncStatusBean request =map.get(req.getRequestId());
-     				if (req.getResult()==null)
-     					request.setResult(false);
-     			    String newhosts= request.getHosts() + ',' +req.getHostName();
-     			    request.setHosts(newhosts);
-     			}
-     		}
-	     		
-     		Iterator<Entry<String, ReqAsyncStatusBean>>  iterator = map.entrySet().iterator();
-     		while (iterator.hasNext()){
-     			ReqAsyncStatusBean request = new ReqAsyncStatusBean();
-     			Map.Entry<String, ReqAsyncStatusBean> entry = iterator.next();
-     			request = (ReqAsyncStatusBean) entry.getValue();
-     			if (!request.getResult())
-     				request.setStatus("In Progress");
-     			else
-     				request.setStatus("Completed");
-     			requests.add(request);
-     		}
-     		return requests;
-	}
 }

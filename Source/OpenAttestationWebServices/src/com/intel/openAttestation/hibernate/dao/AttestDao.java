@@ -14,6 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 package com.intel.openAttestation.hibernate.dao;
 
 import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
+import gov.niarl.hisAppraiser.hibernate.domain.MachineCert;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
@@ -35,6 +36,7 @@ public class AttestDao {
 		try {
 			HibernateUtilHis.beginTransaction();
 			HibernateUtilHis.getSession().save(req);
+			HibernateUtilHis.commitTransaction();
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			throw new RuntimeException(e);
@@ -50,15 +52,19 @@ public class AttestDao {
 	 * @return
 	 */
 	public AttestRequest getRequestById(Long id){
+		AttestRequest req = null;
 		try {
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from AttestRequest a where a.id = :id");
 			query.setLong("id", id);
 			List list = query.list();
 			if (list.size() < 1) {
-				return new AttestRequest();
+				req = new AttestRequest();
 			} else {
-				return (AttestRequest) list.iterator().next();
+				req =  (AttestRequest) list.iterator().next();
 			}
+			HibernateUtilHis.commitTransaction();
+			return req;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			throw new RuntimeException(e);
@@ -74,15 +80,19 @@ public class AttestDao {
 	 * @return
 	 */
 	public List<AttestRequest> getRequestsByRequestId(String requestId){
+		List<AttestRequest> reqs = null;
 		try{
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from AttestRequest a where  a.requestId= :requestId");
 			query.setString("requestId", requestId);
 			List list = query.list();
 			if (list.size() < 1) {
-				return  new ArrayList<AttestRequest>();
+				reqs =  new ArrayList<AttestRequest>();
 			} else {
-				return (List<AttestRequest>) list;
+				reqs =  (List<AttestRequest>) list;
 			}
+			HibernateUtilHis.commitTransaction();
+			return reqs;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			throw new RuntimeException(e);
@@ -98,20 +108,25 @@ public class AttestDao {
 	 * @return
 	 */
 	public List<AttestRequest> getAllRequestsAsync(){
+		List<AttestRequest> reqs = null;
 		try{
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from AttestRequest a where a.isSync=:isSync order by a.requestTime desc");
 			query.setBoolean("isSync", false);
 			List list = query.list();
 			if (list.size() < 1) {
-				return  new ArrayList<AttestRequest>();
+				reqs =  new ArrayList<AttestRequest>();
 			} else {
-				return (List<AttestRequest>) list;
+				reqs = (List<AttestRequest>) list;
+				System.out.println("zlj:" +reqs.get(0).getRequestId() +reqs.get(0).getMachineCert());
 			}
+			HibernateUtilHis.commitTransaction();
+			return reqs;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			throw new RuntimeException(e);
 		}finally{
-//			HibernateUtilHis.closeSession();
+			HibernateUtilHis.closeSession();
 		}
 			
 	}
@@ -123,15 +138,19 @@ public class AttestDao {
 	 * @return
 	 */
 	public AuditLog getAuditLogById(long id){
+		AuditLog auditLog = null;
 		try{
+			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from AuditLog a where a.id = :id");
 			query.setLong("id", id);
 			List list = query.list();
 			if (list.size() < 1) {
-				return null;
+				auditLog = null;
 			} else {
-				return (AuditLog) list.iterator().next();
+				auditLog = (AuditLog) list.iterator().next();
 			}
+			HibernateUtilHis.commitTransaction();
+			return auditLog;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			throw new RuntimeException(e);
@@ -152,7 +171,7 @@ public class AttestDao {
 			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
 			session.update(req);
-			session.flush();
+			HibernateUtilHis.commitTransaction();
 			return  (AttestRequest)session.get(AttestRequest.class, req.getId());
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
@@ -168,22 +187,58 @@ public class AttestDao {
 	 * @Return The AttestRequest entry
 	 */
 	public AttestRequest getLastAttestedRequest(String hostName){
+		AttestRequest req = null;
 		try {
+			HibernateUtilHis.beginTransaction();
 			hostName = hostName.toLowerCase();
 			Query query = HibernateUtilHis.getSession().createQuery("from AttestRequest a where a.hostName = :hostName and" +
 					                " a.result is not null order by a.requestTime desc");
 			query.setString("hostName", hostName);
 			List list = query.list();
 			if (list.size() < 1) {
-				return new AttestRequest();
+				req = new AttestRequest();
 			} else {
-				return (AttestRequest) list.iterator().next();
+				req = (AttestRequest) list.iterator().next();
 			}
+			HibernateUtilHis.commitTransaction();
+			return req;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
 		}
+	}
+	
+	/**
+	 * Obtain the active MachineCert row for a given machine name.
+	 * @param machineName Name of the machine of interest.
+	 * @return The MachineCert entry or null if the machine name has no
+	 * active registrations
+	 */
+	public MachineCert getMachineCert(String machineName) {
+		machineName = machineName.toLowerCase();
+		MachineCert cert = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("from MachineCert m where m.machineName = :machineName and m.active = :active");
+			query.setString("machineName", machineName);
+			query.setBoolean("active", true);
+			List list = query.list();
+			if (list.size() < 1) {
+				cert = null;
+			} else {
+				cert = (MachineCert) list.iterator().next();
+			}
+			HibernateUtilHis.commitTransaction();
+			return cert;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+		
 	}
 }

@@ -11,21 +11,23 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
 package com.intel.openAttestation.resource;
-import gov.niarl.hisAppraiser.hibernate.dao.HisMachineCertDao;
 import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
 import com.intel.openAttestation.util.ActionConverter;
 import com.intel.openAttestation.util.ActionDelay.Action;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
-
 import com.intel.openAttestation.util.AttestUtil;
-
 import com.intel.openAttestation.bean.Host;
 import com.intel.openAttestation.bean.PCRValue;
+import com.intel.openAttestation.bean.ReqAsyncStatusBean;
 import com.intel.openAttestation.bean.ReqAttestationBean;
 import com.intel.openAttestation.bean.RespAsyncBean;
 import com.intel.openAttestation.bean.RespSyncBean;
@@ -227,7 +229,7 @@ public class AttestService {
 			else
 				attestRequests[i].setNextAction(ActionConverter.getIntFromAction(Action.DO_NOTHING));
 			attestRequests[i].setIsConsumedByPollingWS(false);
-			attestRequests[i].setMachineCert(new HisMachineCertDao().getMachineCert(reqAttestation.getHosts().get(i)));
+			attestRequests[i].setMachineCert(dao.getMachineCert(reqAttestation.getHosts().get(i)));
 			attestRequests[i].setRequestHost(requestHost);
 			attestRequests[i].setCount(reqAttestation.getCount());
 			attestRequests[i].setPCRMask(reqAttestation.getPCRmask());
@@ -258,10 +260,45 @@ public class AttestService {
         return dao.getRequestById(id);
 	}
 
-
-	public static List<AttestRequest> getRequestsAsync() {
-		AttestDao dao = new AttestDao();
-		return dao.getAllRequestsAsync();
+        public static List<ReqAsyncStatusBean> getRequestsAsync(){
+		 AttestDao dao = new AttestDao();
+		 List<AttestRequest> reqs = dao.getAllRequestsAsync();
+		 List<ReqAsyncStatusBean> requests = new ArrayList<ReqAsyncStatusBean>();
+	     	HashMap<String,ReqAsyncStatusBean> map = new HashMap<String,ReqAsyncStatusBean>();
+    		for (AttestRequest req: reqs){
+    			if (!map.containsKey(req.getRequestId())){
+    				ReqAsyncStatusBean request = new ReqAsyncStatusBean();
+    				request.setRequestId(req.getRequestId());
+    				request.setHosts(req.getHostName());
+    				request.setPCRMask(req.getPCRMask());
+    				request.setRequestTime(req.getRequestTime());
+    				request.setCount(req.getCount());
+    				request.setResult(true);
+    				if (req.getResult()==null)
+    					request.setResult(false);
+    				map.put(req.getRequestId(), request);
+    			}
+    			else{
+    				ReqAsyncStatusBean request =map.get(req.getRequestId());
+    				if (req.getResult()==null)
+    					request.setResult(false);
+    			    String newhosts= request.getHosts() + ',' +req.getHostName();
+    			    request.setHosts(newhosts);
+    			}
+    		}
+	     		
+    		Iterator<Entry<String, ReqAsyncStatusBean>>  iterator = map.entrySet().iterator();
+    		while (iterator.hasNext()){
+    			ReqAsyncStatusBean request = new ReqAsyncStatusBean();
+    			Map.Entry<String, ReqAsyncStatusBean> entry = iterator.next();
+    			request = (ReqAsyncStatusBean) entry.getValue();
+    			if (!request.getResult())
+    				request.setStatus("In Progress");
+    			else
+    				request.setStatus("Completed");
+    			requests.add(request);
+    		}
+    		return requests;
 	}
 
 	/**

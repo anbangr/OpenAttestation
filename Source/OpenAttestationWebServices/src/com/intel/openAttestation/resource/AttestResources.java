@@ -42,6 +42,7 @@ import com.intel.openAttestation.resource.CheckAttestThread;
 import com.intel.openAttestation.util.AttestUtil;
 import com.intel.openAttestation.util.ResultConverter;
 import com.intel.openAttestation.util.ResultConverter.AttestResult;
+import com.intel.openAttestation.bean.ReqAsyncStatusBean;
 
 @Path("/V1.0")
 public class AttestResources {
@@ -91,7 +92,7 @@ public class AttestResources {
 	    				}
 	    				else{
 	    					req.setNextAction(ActionConverter.getIntFromAction(Action.SEND_REPORT));
-	    					logger.info("Next Action:" +req.getNextAction());
+	    					logger.debug("Next Action:" +req.getNextAction());
 	    				}
 	    				dao.updateRequest(req);
 	    			}
@@ -360,8 +361,8 @@ public class AttestResources {
 	    try{
 	    	if (AttestService.ISV_Autherntication_module()){
 	    		logger.debug("Request Host:" +requestHost +" Authentication successfully!");
-	    	    List<AttestRequest> reqs =  AttestService.getRequestsAsync();
-	    	    GenericEntity<List<AttestRequest>> entity = new GenericEntity<List<AttestRequest>>(reqs) {};
+                        List<ReqAsyncStatusBean> reqs =  AttestService.getRequestsAsync();
+               	        GenericEntity<List<ReqAsyncStatusBean>> entity = new GenericEntity<List<ReqAsyncStatusBean>>(reqs) {};
 	    		return Response.status(status).header("Location", b.build()).entity(entity)
 						.build();
 	     	}
