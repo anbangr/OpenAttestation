@@ -20,6 +20,7 @@ OATD=/OAT/OAT_Standalone.jar
 pid_file=/var/run/his.pid
 lock_file=/var/lock/subsys/his
 log_file=/var/log/OAT.log
+analysis_measure_log=/OAT/measure_analysis.sh
 RETVAL=0
 
 [ -x ${TROUSERS} ] || exit 0
@@ -45,6 +46,7 @@ start() {
 	[ -f /OAT/OAT.properties ] || exit 6
 
 	echo -n $"Starting $OATD: "
+        sh $analysis_measure_log
 	$JAVA -jar $OATD /OAT/ -d > "$log_file" 2>&1 &
 	PID=$!
 	RETVAL=$?

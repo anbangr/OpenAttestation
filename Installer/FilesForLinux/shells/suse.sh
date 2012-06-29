@@ -17,10 +17,11 @@ rc_reset
 JAVA=/usr/bin/java
 TROUSERS=/usr/sbin/tcsd
 prog="java"
-HISD=/g/OAT_Standalone.jar
+HISD=/OAT/OAT_Standalone.jar
 pid_file=/var/run/his.pid
 lock_file=/var/lock/subsys/his
 log_file=/var/log/OAT.log
+analysis_measure_log=/OAT/measure_analysis.sh
 RETVAL=0
 
 [ -x ${TROUSERS} ] || exit 0
@@ -30,7 +31,7 @@ service tcsd status || echo $"tcsd needs to be running" || exit 0
 HIS_status(){
 	if [ -e "$pid_file" ]; then
 		pid=$"`cat $pid_file`"
-		item=`ps aux | grep "$pid\ "`
+		item=`ps aux | grep "$pid "`
 		if [ $"$item" ]; then
 			echo $"OAT (pid $pid) is running..."
 		else
@@ -46,7 +47,8 @@ start() {
 	[ -f /OAT/OAT.properties ] || exit 6
 
 	echo -n $"Starting $HISD: "
-	$JAVA -jar $HISD /g/ -d > "$log_file" 2>&1 &
+        sh $analysis_measure_log
+	$JAVA -jar $HISD /OAT/ -d > "$log_file" 2>&1 &
 	PID=$!
 	RETVAL=$?
 	[ "$RETVAL" = 0 ] && touch $lock_file && echo $PID > $pid_file

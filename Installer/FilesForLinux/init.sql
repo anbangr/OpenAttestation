@@ -33,3 +33,47 @@ CREATE TABLE `attest_request` (
   KEY `UNIQUE` (`request_id`,`host_id`)
 );
 
+CREATE TABLE measure_log (
+  id int NOT NULL AUTO_INCREMENT,
+   audit_id             int not null,
+   txt_status           int,
+   PRIMARY KEY (id)
+);
+
+CREATE TABLE txt_log (
+   id                   int NOT NULL  AUTO_INCREMENT,
+   measure_id           int NOT NULL,
+   os_sinit_data_capabilities varchar(100),
+   version              int,
+   sinit_hash           varchar(100),
+   edx_senter_flags     varchar(100),
+   bios_acm_id          varchar(100),
+   mseg_valid           varchar(100),
+   stm_hash             varchar(100),
+   policy_control       varchar(100),
+   lcp_policy_hash      varchar(100),
+   processor_scr_tm_status varchar(100),
+   mle_hash         varchar(100),
+   PRIMARY KEY (id)
+);
+
+CREATE TABLE module (
+   id int NOT NULL AUTO_INCREMENT,
+   measure_id           int NOT NULL,
+   module_name          varchar(50),
+   module_value         varchar(100),
+   pcr_number           int,
+   PRIMARY KEY (id)
+);
+
+CREATE TABLE component_manifest (
+   `index` int NOT NULL AUTO_INCREMENT,
+   comp_name            varchar(50),
+   comp_value           varchar(100),
+   comp_desc            varchar(100),
+   create_time          datetime,
+   create_request_host  varchar(50),
+   last_update_time     datetime,
+   last_update_request_host varchar(50),
+   PRIMARY KEY (`index`)
+);

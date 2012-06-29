@@ -24,36 +24,65 @@ fi
 
 
 # unpack OAT client files
-rm -rf /OAT
+if [ -d /OAT/ ]; then 
+rm -rf /OAT/*
+else
+mkdir /OAT/
+fi
+touch /OAT/measureLog.xml
+chmod -R a+w /OAT/
 
 tar vfxz NIARL_OAT_Standalone.tar.gz -C /
 cp shells/$dist.sh /OAT/OAT.sh
 chmod +x /OAT/OAT.sh
-cp -f /OAT/OAT.sh /etc/init.d/OAT.sh
+
+cp -f /OAT/OAT.sh /etc/init.d/OATClient
 
 cp -f OAT.properties /OAT
 cp -f TrustStore.jks /OAT
 cp -f NIARL_TPM_Module /OAT
 
 rm -f /OAT/uninstallOAT.sh
-echo "/etc/init.d/OAT.sh stop" >> /OAT/uninstallOAT.sh
+echo "/etc/init.d/OATClient stop" >> /OAT/uninstallOAT.sh
 echo "rm -rf /OAT" >> /OAT/uninstallOAT.sh
-echo "rm -f /etc/init.d/OAT.sh" >> /OAT/uninstallOAT.sh
+echo "rm -f /etc/init.d/OATClient" >> /OAT/uninstallOAT.sh
 
 # let it run at startup
 if [ "$dist" = "fedora" ]; then
-    ln -fs /etc/init.d/OAT.sh /etc/rc5.d/S99OAT
-    echo "rm -f /etc/rc5.d/S99OAT" >> /OAT/uninstallOAT.sh
+    ln -fs /etc/init.d/OATClient /etc/rc5.d/S99OATClient
+    ln -fs /etc/init.d/OATClient /etc/rc3.d/S99OATClient
+    chkconfig OATClient on
+    echo "rm -f /etc/rc5.d/S99OATClient" >> /OAT/uninstallOAT.sh
+    echo "rm -f /etc/rc3.d/S99OATClient" >> /OAT/uninstallOAT.sh
+    cp -f measure_analysis.sh /OAT/measure_analysis.sh
+    chmod +x /OAT/measure_analysis.sh
 fi
 
 if [ "$dist" = "suse" ]; then
-    ln -fs /etc/init.d/OAT.sh /etc/init.d/rc5.d/S99OAT
-    echo "rm -f /etc/init.d/rc5.d/S99OAT" >> /OAT/uninstallOAT.sh
+    ln -fs /etc/init.d/OATClient /etc/init.d/rc5.d/S99OATClient
+    ln -fs /etc/init.d/OATClient /etc/init.d/rc3.d/S99OATClient
+    chkconfig OATClient on
+    echo "rm -f /etc/init.d/rc5.d/S99OATClient" >> /OAT/uninstallOAT.sh
+    echo "rm -f /etc/init.d/rc3.d/S99OATClient" >> /OAT/uninstallOAT.sh
+    cp -f measure_analysis.sh /OAT/measure_analysis.sh
+    chmod +x /OAT/measure_analysis.sh
+
 fi
 
 if [ "$dist" = "ubuntu" ]; then
-    ln -fs /etc/init.d/OAT.sh /etc/rc5.d/S99OAT
-    echo "rm -f /etc/rc5.d/S99OAT" >> /OAT/uninstallOAT.sh
+    update-rc.d OATClient defaults 99
+	update-rc.d OATClient enable
+    echo "update-rc.d OATClient disable" >> /OAT/uninstallOAT.sh
+	echo "update-rc.d -f OATClient remove" >> /OAT/uninstallOAT.sh
+###sudo txt-stat NOPASSWD###
+  if [ `dpkg -L tboot` ]; then
+    sed -i "/txt-stat/d" /etc/sudoers
+    echo "%`hostname` ALL=(root)NOPASSWD: `which txt-stat`" >> /etc/sudoers   
+  fi
+###cp###
+    cp -f measure_analysis_ubuntu.sh /OAT/measure_analysis.sh
+    chmod +x /OAT/measure_analysis.sh
+
 fi
 
 # OAT provisioning
