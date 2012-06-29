@@ -1,0 +1,68 @@
+set @@sql_mode='';
+CREATE DATABASE oat_db;
+USE oat_db;
+CREATE TABLE alerts (
+	id int NOT NULL AUTO_INCREMENT,
+	audit_fk int,
+	status varchar(255),
+	assignedTo varchar(255),
+	comments text,
+  PRIMARY KEY (id)
+);
+CREATE TABLE audit_log (
+	id int NOT NULL AUTO_INCREMENT,
+	SID varchar(255),
+	machine_name varchar(255),
+	timestamp datetime,
+	pcr0 varchar(100),
+	pcr1 varchar(100),
+	pcr4 varchar(100),
+	pcr5 varchar(100),
+	report text,
+	previous_differences varchar(255),
+	report_errors text,
+	pcr2 varchar(100),
+	pcr3 varchar(100),
+	pcr6 varchar(100),
+	pcr7 varchar(100),
+	pcr8 varchar(100),
+	pcr9 varchar(100),
+	pcr10 varchar(100),
+	pcr11 varchar(100),
+	pcr12 varchar(100),
+	pcr13 varchar(100),
+	pcr14 varchar(100),
+	pcr15 varchar(100),
+	pcr16 varchar(100),
+	pcr17 varchar(100),
+	pcr18 varchar(100),
+	pcr19 varchar(100),
+	pcr20 varchar(100),
+	pcr21 varchar(100),
+	pcr22 varchar(100),
+	pcr23 varchar(100),
+	machine_id int,
+	pcr_select varchar(100),
+	nonce varchar(100),
+	signature_verified tinyint NOT NULL DEFAULT 0,
+  PRIMARY KEY (id)
+);
+CREATE TABLE machine_cert (
+	id int NOT NULL AUTO_INCREMENT,
+	machine_name varchar(50),
+	certificate text,
+	active tinyint NOT NULL DEFAULT 1,
+	privacy_ca_id int,
+	timestamp datetime,
+	last_poll datetime,
+	next_action int,
+	poll_args varchar(255),
+  PRIMARY KEY (id)
+);
+CREATE TABLE system_constants (
+	id int NOT NULL AUTO_INCREMENT,
+	key_id varchar(255),
+	value text,
+	description text,
+  PRIMARY KEY (id)
+);insert into system_constants (key_id, value) values ('default_delay', 10000);

@@ -1,0 +1,16 @@
+CREATE TABLE `his_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `access` int(11) DEFAULT NULL,
+  `active` int(11) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `getsEmail` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+);
+
+
+INSERT INTO his_users
+(name,email,access,active,password,getsEmail)
+VALUES
+('admin', 'admin', 3, 1, 'hI3MbI8WiatWI', 1);

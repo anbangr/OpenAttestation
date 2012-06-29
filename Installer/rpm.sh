@@ -39,6 +39,26 @@ CreateRPMdirectory()
 #Install HIS-Appraiser-Base.tar.gz
 InstallOatAppraiserBase()
 {
+  if test -d ./OAT-Appraiser-Base;then
+    cd ./OAT-Appraiser-Base
+    zip -9 clientInstallRefresh.zip clientInstallRefresh.sh
+    rm -f clientInstallRefresh.sh
+    zip -9 linuxClientInstallRefresh.zip linuxClientInstallRefresh.sh
+    rm -f linuxClientInstallRefresh.sh
+    zip -9 MySQLdrop.zip MySQLdrop.txt
+    rm -f MySQLdrop.txt
+    chmod 755 MySQLdrop.zip
+    zip -9 -r OAT_Server_Install.zip OAT_Server_Install/
+    rm -rf OAT_Server_Install/
+    zip -9 oatSetup.zip oatSetup.txt
+    rm -f oatSetup.txt
+    zip -9 -r service.zip service/
+    rm -rf service/
+    cd ../
+    tar -czvf OAT-Appraiser-Base.tar.gz ./OAT-Appraiser-Base/
+    rm -rf ./OAT-Appraiser-Base/
+  fi
+
   if test -e ./OAT-Appraiser-Base.tar.gz;then
     cp OAT-Appraiser-Base.tar.gz $RPM_BUILD_SOURCE_DIRECTORY
     ShowLogOK "./OAT-Appraiser-Base.tar.gz"
@@ -139,6 +159,18 @@ LinuxOatInstall()
   else
     ShowLogFaild "./FilesForLinux/shells"
   fi
+  
+  if test -e ./measure_analysis_ubuntu.sh;then
+    cp -ar ./measure_analysis_ubuntu.sh linuxOatInstall
+  else 
+    ShowLogFaild "./measure_analysis_ubuntu.sh"
+  fi 
+  
+  if test -e ./measure_analysis.sh;then
+    cp -ar ./measure_analysis.sh linuxOatInstall
+  else
+    ShowLogFaild "./measure_analysis.sh"
+  fi
 
   if test -e $RPM_BUILD_RPMS_DIRECTORY/$RPM_V;then
     cp $RPM_BUILD_RPMS_DIRECTORY/$RPM_V  linuxOatInstall
@@ -211,10 +243,19 @@ RePkgInstallOatAppraiserBase()
   CurDir=$(pwd)
   if test -e $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base.tar.gz;then
      cd  $RPM_BUILD_SOURCE_DIRECTORY
+     rm -rf OAT-Appraiser-Base
      tar -zxvf OAT-Appraiser-Base.tar.gz
   else
      ShowLogFaild "$RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base.tar.gz"
   fi
+ 
+  
+   if test -e $CurDir/FilesForLinux/apache-tomcat-6.0.29.tar.gz;then
+     cp $CurDir/FilesForLinux/apache-tomcat-6.0.29.tar.gz $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+   else
+     ShowLogFaild "$CurDir/FilesForLinux/apache-tomcat-6.0.29.tar.gz"
+   fi
+ 
 #  if test -e $CurDir/FilesForLinux/linuxClientInstallRefresh.zip;then 
 #    cp $CurDir/FilesForLinux/linuxClientInstallRefresh.zip  $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
 #  else
@@ -277,16 +318,6 @@ RePkgInstallOatAppraiserBase()
  else
    ShowLogFaild "$OATSOURCE_DIRECTORY/HisWebServices/WEB-INF" 
  fi
-#HIS.properties
- sed -i "s/^PCR_SELECT=.*$/PCR_SELECT=FFFFFF/g" OAT.properties
- echo "insert into system_constants (key_id, value) values ('default_delay', 10000);" >> oat_db.MySQL
-# hibernateHis.cfg.xml 
-#sed -ie '/<\/session-factory\>/i\\                <mapping resource="gov\/niarl\/hisAppraiser\/hibernate\/mapping\/users.hbm.xml"\/>' hibernateOat.cfg.xml
-sed -ie '/<\/session-factory\>/i\\                <mapping resource="gov\/niarl\/hisAppraiser\/hibernate\/mapping\/attestRequest.hbm.xml"\/>' hibernateOat.cfg.xml
-
-if test -e hibernateOat.cfg.xmle;then
-  rm -rf hibernateOat.cfg.xmle
-fi
 
 # OpenAttestation *.war --> HIS_Server_Install.zip
 #if test -e $CurDir/$OATSOURCE_DIRECTORY/OpenAttestationAdminConsole/OpenAttestationAdminConsole.war -a -e $CurDir/$OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war -e $CurDir/$OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war;then

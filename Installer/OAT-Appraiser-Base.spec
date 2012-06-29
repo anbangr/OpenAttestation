@@ -90,17 +90,22 @@ sleep 10
 
 #Configuring mysqld so we can set up database and hisAppraiser profile
 
-sed -i 's/--datadir="$datadir" --socket="$socketfile"/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
+#sed -i 's/--datadir="$datadir" --socket="$socketfile"/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
 
 service mysqld start
 
 #Sets up database and user
+ISSKIPGRANTEXIT=`grep skip-grant-tables /etc/my.cnf`
+if [ ! "$ISSKIPGRANTEXIT" ]; then
+  sed -i 's/\[mysqld\]/\[mysqld\]\nskip-grant-tables/g' /etc/my.cnf
+fi
+
 
 mysql -u root --execute="CREATE DATABASE oat_db; FLUSH PRIVILEGES; GRANT ALL ON oat_db.* TO 'oatAppraiser'@'localhost' IDENTIFIED BY '$randpass3';"
 
 service mysqld stop
 
-sed -i 's/--datadir="$datadir" --socket="$socketfile"/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
+#sed -i 's/--datadir="$datadir" --socket="$socketfile"/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
 
 
 #setting up tomcat at $TOMCAT_INSTALL_DIR/
@@ -125,7 +130,7 @@ mkdir $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate
 
 rm -R -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/*
 
-chkconfig --del NetworkManager
+#chkconfig --del NetworkManager
 chkconfig network on
 chkconfig httpd --add
 chkconfig httpd on
@@ -134,9 +139,9 @@ chkconfig mysqld on
 service mysqld start
 
 #running OAT database full setup
-rm -rf /%{name}/MySQLdrop.txt
-unzip /%{name}/MySQLdrop.zip -d /%{name}/
-mysql -u root < /%{name}/MySQLdrop.txt
+#rm -rf /%{name}/MySQLdrop.txt
+#unzip /%{name}/MySQLdrop.zip -d /%{name}/
+#mysql -u root < /%{name}/MySQLdrop.txt
 rm -rf /%{name}/OAT_Server_Install
 unzip /%{name}/OAT_Server_Install.zip -d /%{name}/
 rm -rf /tmp/OAT_Server_Install
@@ -174,6 +179,11 @@ cp  /tmp/OAT_Server_Install/OpenAttestationWebServices.war $TOMCAT_INSTALL_DIR/$
 unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole
 unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices
 unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices
+#delete the OpenAttestation war package
+rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole.war
+rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices.war
+rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices.war
+
  echo "$TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties has updated"
  sed -i "s/<server.domain>/$(hostname)/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/OpenAttestation.properties
  sed -i "s/<server.domain>/$(hostname)/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties
@@ -221,7 +231,12 @@ mysql -u root --database=oat_db < /%{name}/oatSetup.txt
 service mysqld stop
 
 #sets configuration of mysql back to normal
-sed -i 's/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/--datadir="$datadir" --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
+#sed -i 's/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/--datadir="$datadir" --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
+ISSKIPGRANTEXIT=`grep nskip-grant-tables /etc/my.cnf`
+if [  "$ISSKIPGRANTEXIT" ]; then
+  sed -i 's/\[mysqld\]\nskip-grant-tables/\[mysqld\]g' /etc/my.cnf
+fi
+
 
 service mysqld start
 
@@ -463,17 +478,16 @@ rm -f -r /var/www/html/ClientInstaller.html
 #removes both the OAT mysql database and the hisAppraiser mysql user
 
 service mysqld stop
-sed -i 's/--datadir="$datadir" --socket="$socketfile"/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
+#sed -i 's/--datadir="$datadir" --socket="$socketfile"/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
 
 service mysqld start
-
 mysql -u root --execute="FLUSH PRIVILEGES; DROP DATABASE IF EXISTS oat_db; DELETE FROM mysql.user WHERE User='oatAppraiser' and Host='localhost';"
 
 printf "OAT database removed\n"
 
 service mysqld stop
 
-sed -i 's/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/--datadir="$datadir" --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
+#sed -i 's/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/--datadir="$datadir" --socket="$socketfile"/g' /etc/rc.d/init.d/mysqld
 
 service mysqld start
 
