@@ -12,11 +12,14 @@ make -C ./TPMModule/plain/linux/
 #chmod +x NIARL_TPM_Module
 
 #2. build HisAppraiser
+ant -file ./HisAppraiser/xml/Integrity_Report_Manifest_v1_0/build.xml
+ant -file ./HisAppraiser/xml/PCR_Difference/build.xml
 ant -file ./HisAppraiser/build.xml
 cp -rf ./HisAppraiser/HisAppraiser.jar ./OpenAttestationWebServices/WebContent/WEB-INF/lib/
 cp -rf ./HisAppraiser/HisAppraiser.jar ./HisWebServices/clientlib/
 cp -rf ./HisAppraiser/HisAppraiser.jar ./HisWebServices/WEB-INF/lib/HisAppraiser.jar
 cp -rf ./HisAppraiser/HisAppraiser.jar ./OpenAttestationAdminConsole/WebContent/WEB-INF/lib/
+cp -rf ./HisAppraiser/HisAppraiser.jar  ./OpenAttestationManifestWebServices/WebContent/WEB-INF/lib/
 
 #3. build HisWebServices
 #cp -rf ./HisAppraiser/HisAppraiser.jar ./HisWebServices/WEB-INF/lib/
@@ -94,4 +97,6 @@ cp -rf ./PrivacyCA/PrivacyCA.jar ./HisPrivacyCAWebServices2/ClientFiles/lib/
 
 #6. build HisClient
 mkdir ./HisClient/jar
+ant -file ./HisClient/xml/Integrity_Report_Manifest_v1_0/build.xml
 ant -file ./HisClient/build.xml
+rm -rf $1/webapps/*
