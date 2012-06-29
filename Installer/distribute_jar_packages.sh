@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # distribute Jar package
 
 OAT_SOURCE=../Source
@@ -925,7 +925,7 @@ if test -e $JAR_SOURCE/jaxrpc.jar;then
   	cp -nrf $JAR_SOURCE/jaxrpc.jar $OAT_SOURCE/TSSCoreService/lib/jaxrpc.jar
   fi
 else
-  ShowLogFaild "$JAR_SOURCE/bcprov-jdk15-129.jar"
+  ShowLogFaild "$JAR_SOURCE/jaxrpc.jar"
 fi
 
 if test -e $JAR_SOURCE/saaj.jar;then
@@ -944,7 +944,11 @@ else
   ShowLogFaild "$JAR_SOURCE/ant-antlr-1.6.5.jar"
 fi
 
-
+if test -e $JAR_SOURCE/apache-tomcat-6.0.29.tar.gz;then
+  cp -nrf $JAR_SOURCE/apache-tomcat-6.0.29.tar.gz ./FilesForLinux
+else
+  ShowLogFaild "$JAR_SOURCE/apache-tomcat-6.0.29.tar.gz"
+fi
 ####### SALlib #####
 cp -nrf $JAR_SOURCE/hibernate3.jar  $OAT_SOURCE/HisPrivacyCAWebServices2/ClientFiles/lib/SALlib_hibernate3.jar
 cp -nrf $JAR_SOURCE/log4j-1.2.8.jar $OAT_SOURCE/HisPrivacyCAWebServices2/WEB-INF/lib/SALlib_log4j-1.2.8.jar
