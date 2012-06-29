@@ -1,0 +1,11 @@
+Package: oat-appraiser-base-oatapp
+Version: 1.0.0-3
+Architecture: amd64 
+Maintainer: Jimmy Wei <gang.wei@intel.com> 
+Installed-Size: 130284
+Section: 
+Priority: extra
+Description: The OAT Appraiser Base Install
+ The Host Integrity at Startup Installation
+ of the OAT Appraiser Server Base Install
+ .

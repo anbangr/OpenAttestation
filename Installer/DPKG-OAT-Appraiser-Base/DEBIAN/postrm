@@ -1,0 +1,65 @@
+#! /bin/bash
+
+TOMCAT_INSTALL_DIR2=/usr/lib
+TOMCAT_NAME2=apache-tomcat-6.0.29
+name=OAT-Appraiser-Base
+
+if [ $TOMCAT_DIR -a  -d $TOMCAT_DIR ];then
+  if [[ ${TOMCAT_DIR:$((${#TOMCAT_DIR}-1)):1} == / ]];then
+    TOMCAT_DIR_TMP=${TOMCAT_DIR:0:$((${#TOMCAT_DIR}-1))}
+  else
+    TOMCAT_DIR_TMP=$TOMCAT_DIR
+  fi
+
+  TOMCAT_INSTALL_DIR2=${TOMCAT_DIR_TMP%/*}
+  TOMCAT_NAME2=${TOMCAT_DIR_TMP##*/}
+fi
+service tomcat6 stop
+update-rc.d -f tomcat6 remove 1>>/dev/null
+sed -i "/<\/Service>/d" $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/conf/server.xml
+sed -i "/<\/Server>/i\\  <\/Service>"  $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/conf/server.xml
+rm -rf /$name/
+#remove apache-tomcat
+if [ $TOMCAT_NAME2 = apache-tomcat-6.0.29 ];then
+rm -f -r $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29.tar.gz
+rm -rf $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/apache-tomcat-6.0.29
+fi
+
+#OAT_Server
+rm -f -r /tmp/OAT_Server_Install
+rm -f -r /var/www/OAT
+
+#OAT_PrivacyCA
+#rm -f -r /tmp/OAT_PrivacyCA_Install
+#rm -f -r /var/www/html/ClientInstall.zip
+rm -f -r /var/www/ClientInstallForLinux.zip
+rm -f -r /var/www/ClientInstaller.html
+
+#removes both the OAT mysql database and the hisAppraiser mysql user
+#stop mysql and tomcat service
+MYSQL=`netstat -nutlp | grep :3306 | grep mysql`
+if [ "$MYSQL" ]; then
+  service mysql stop
+fi
+ISSKIPGRANTEXIT=`grep skip-grant-tables /etc/mysql/my.cnf`
+if [ ! "$ISSKIPGRANTEXIT" ]; then
+  sed -i 's/\[mysqld\]/\[mysqld\]\nskip-grant-tables/g' /etc/mysql/my.cnf
+fi
+if [ ! `netstat -nutlp | grep :3306 | grep mysql` ]; then
+  service mysql start
+fi
+
+mysql -u root --execute="FLUSH PRIVILEGES; DROP DATABASE IF EXISTS oat_db; DELETE FROM mysql.user WHERE User='oatAppraiser' and Host='localhost';"
+
+printf "OAT database removed\n"
+
+if [ "`netstat -nutlp | grep :3306 | grep mysql`" ]; then
+  service mysql stop
+fi
+
+sed -i 's/skip-grant-tables//g' /etc/mysql/my.cnf
+
+if [ ! `netstat -nutlp | grep :3306 | grep mysql` ]; then
+  service mysql start
+fi
+
