@@ -34,6 +34,7 @@ package gov.niarl.sal.webservices.hisWebService.server;
 
 import gov.niarl.hisAppraiser.hibernate.dao.*;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
+import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
 import gov.niarl.sal.webservices.hisWebService.server.domain.ActionConverter;
 import gov.niarl.sal.webservices.hisWebService.server.domain.ActionDelay;
 import gov.niarl.sal.webservices.hisWebService.server.domain.ActionDelay.Action;
@@ -65,13 +66,25 @@ public class HisPollingWebService {
 		logger.debug("getNextAction called with arguments machineName=" + machineName);
 		Action action = Action.DO_NOTHING;
 		String args = "";
-		AttestDao attestDao = new AttestDao();
-		AttestRequest attestRequest = attestDao.getFirstRequest(machineName);
-		action = ActionConverter.getActionFromInt(attestRequest.getNextAction() == null ? ActionConverter.getIntFromAction(Action.DO_NOTHING) : attestRequest.getNextAction());
-		if (attestRequest.getId()!= null){
-			attestRequest.setNextAction(ActionConverter.getIntFromAction(Action.DO_NOTHING));
-			attestRequest.setIsConsumedByPollingWS(true);
-			attestDao.updateRequest(attestRequest);
+		try {
+			HibernateUtilHis.beginTransaction();
+			AttestDao attestDao = new AttestDao();
+			AttestRequest attestRequest = attestDao.getFirstRequest(machineName);
+			action = ActionConverter.getActionFromInt(attestRequest.getNextAction() == null? ActionConverter.getIntFromAction(Action.DO_NOTHING) : attestRequest.getNextAction());
+			
+			System.out.println("Next Action:" +ActionConverter.getIntFromAction(action));
+			if (attestRequest.getId()!= null){
+				attestRequest.setNextAction(ActionConverter.getIntFromAction(Action.DO_NOTHING));
+				attestRequest.setIsConsumedByPollingWS(true);
+				attestDao.updateRequest(attestRequest);
+			}
+			HibernateUtilHis.commitTransaction();
+		}catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e.toString());
+		}finally{
+			HibernateUtilHis.closeSession();
 		}
 		return new ActionDelay(action, HisSystemConstants.DEFAULT_DELAY, args);
 	}
