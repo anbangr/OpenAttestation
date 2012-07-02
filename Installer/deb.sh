@@ -137,18 +137,6 @@ LinuxOatInstall()
     ShowLogFaild "./FilesForLinux/install.sh"
   fi
 
-  if test -e ./measure_analysis.sh;then
-	cp ./measure_analysis.sh linuxOatInstall
-  else
-	ShowLogFaild "./measure_analysis.sh"
-  fi
-
-  if test -e ./measure_analysis_ubuntu.sh;then
-    cp ./measure_analysis_ubuntu.sh linuxOatInstall
-  else
-    ShowLogFaild "./measure_analysis_ubuntu.sh"
-  fi
-
   if test -e ./FilesForLinux/general-install.sh;then
     cp ./FilesForLinux/general-install.sh linuxOatInstall
   else

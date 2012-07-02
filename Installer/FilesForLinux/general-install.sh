@@ -29,7 +29,6 @@ rm -rf /OAT/*
 else
 mkdir /OAT/
 fi
-touch /OAT/measureLog.xml
 chmod -R a+w /OAT/
 
 tar vfxz NIARL_OAT_Standalone.tar.gz -C /
@@ -54,8 +53,6 @@ if [ "$dist" = "fedora" ]; then
     chkconfig OATClient on
     echo "rm -f /etc/rc5.d/S99OATClient" >> /OAT/uninstallOAT.sh
     echo "rm -f /etc/rc3.d/S99OATClient" >> /OAT/uninstallOAT.sh
-    cp -f measure_analysis.sh /OAT/measure_analysis.sh
-    chmod +x /OAT/measure_analysis.sh
 fi
 
 if [ "$dist" = "suse" ]; then
@@ -64,25 +61,13 @@ if [ "$dist" = "suse" ]; then
     chkconfig OATClient on
     echo "rm -f /etc/init.d/rc5.d/S99OATClient" >> /OAT/uninstallOAT.sh
     echo "rm -f /etc/init.d/rc3.d/S99OATClient" >> /OAT/uninstallOAT.sh
-    cp -f measure_analysis.sh /OAT/measure_analysis.sh
-    chmod +x /OAT/measure_analysis.sh
-
 fi
 
 if [ "$dist" = "ubuntu" ]; then
     update-rc.d OATClient defaults 99
-	update-rc.d OATClient enable
+    update-rc.d OATClient enable
     echo "update-rc.d OATClient disable" >> /OAT/uninstallOAT.sh
-	echo "update-rc.d -f OATClient remove" >> /OAT/uninstallOAT.sh
-###sudo txt-stat NOPASSWD###
-  if [ `dpkg -L tboot` ]; then
-    sed -i "/txt-stat/d" /etc/sudoers
-    echo "%`hostname` ALL=(root)NOPASSWD: `which txt-stat`" >> /etc/sudoers   
-  fi
-###cp###
-    cp -f measure_analysis_ubuntu.sh /OAT/measure_analysis.sh
-    chmod +x /OAT/measure_analysis.sh
-
+    echo "update-rc.d -f OATClient remove" >> /OAT/uninstallOAT.sh
 fi
 
 # OAT provisioning

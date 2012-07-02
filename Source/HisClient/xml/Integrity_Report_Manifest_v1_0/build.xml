@@ -1,0 +1,36 @@
+<project name="Integrity_Report_Manifest_v1_0" basedir="./" default="Build">
+
+        <path id="compile.classpath">
+                <pathelement path="${classpath}" />
+                <fileset dir="../../lib">
+                        <include name="**/*.jar" />
+                        <include name="**/*.zip" />
+                </fileset>
+        </path>
+
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		<classpath refid="compile.classpath" />
+	</taskdef>
+
+
+	<!-- Build project and create distribution-->
+	<target name="Build">
+		<delete dir="src" />
+		<mkdir dir="src" />
+		<xjc destdir="src">
+			<schema dir="./">
+				<include name="Core_Integrity_Manifest_v1_0_1.xsd" />
+				<include name="Integrity_Report_Manifest_v1_0.xsd" />
+			</schema>
+			<binding dir="./">
+				<include name="binding.xjb" />
+			</binding>
+		</xjc>
+               <!-- Clean and copy java files-->
+               <delete dir="../../src/org" />
+               <copy todir="../../src">
+	           <fileset dir="./src"/>
+	       </copy>
+	 </target>
+
+</project>

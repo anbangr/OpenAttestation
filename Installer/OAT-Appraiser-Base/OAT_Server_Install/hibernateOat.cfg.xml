@@ -36,8 +36,5 @@
 		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/alerts.hbm.xml"/>
 		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/system_constants.hbm.xml"/>
 		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/attestRequest.hbm.xml"/>
-		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/measure_log.hbm.xml"/>
-		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/txt_log.hbm.xml"/>
-		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/module.hbm.xml"/>
        	</session-factory>
 </hibernate-configuration>

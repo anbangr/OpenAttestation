@@ -160,18 +160,6 @@ LinuxOatInstall()
     ShowLogFaild "./FilesForLinux/shells"
   fi
   
-  if test -e ./measure_analysis_ubuntu.sh;then
-    cp -ar ./measure_analysis_ubuntu.sh linuxOatInstall
-  else 
-    ShowLogFaild "./measure_analysis_ubuntu.sh"
-  fi 
-  
-  if test -e ./measure_analysis.sh;then
-    cp -ar ./measure_analysis.sh linuxOatInstall
-  else
-    ShowLogFaild "./measure_analysis.sh"
-  fi
-
   if test -e $RPM_BUILD_RPMS_DIRECTORY/$RPM_V;then
     cp $RPM_BUILD_RPMS_DIRECTORY/$RPM_V  linuxOatInstall
   else
