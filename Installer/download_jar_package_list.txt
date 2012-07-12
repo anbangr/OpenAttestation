@@ -69,3 +69,5 @@ ant-antlr-1.6.5.jar-----http://www.docjar.com/jar/ant-antlr-1.6.5.jar
 saaj.jar-----http://www.docjar.com/jar/saaj.jar
 apache-tomcat-6.0.29.tar.gz-----http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.29/bin/apache-tomcat-6.0.29.tar.gz
 jaxrpc.jar-----http://www.docjar.com/jar/jaxrpc.jar
+Core_Integrity_Manifest_v1_0_1.xsd-----http://www.trustedcomputinggroup.org/files/static_page_files/20FAC57B-1D09-3519-AD4490200F9E7E84/Core_Integrity_Manifest_v1_0_1.xsd
+Integrity_Report_Manifest_v1_0.xsd-----http://www.trustedcomputinggroup.org/files/static_page_files/20FB32DB-1D09-3519-ADEF68E9B28F1CF6/Integrity_Report_Manifest_v1_0.xsd
